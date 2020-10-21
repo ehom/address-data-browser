@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-179399937-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-179399937-1');
+  </script>
+
+  <meta charset="utf-8">
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+
+  <title>address data explorer</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+        crossorigin="anonymous">
+  <link rel="stylesheet" href="css/index.css">
+</head>
+
+<body>
+  <div class="container" id="app"></div> 
+
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/addressData.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/US.js"></script>
+  <!--
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/CA.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/GB.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/AU.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/NZ.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/MX.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/AR.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/CL.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/PE.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/BR.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/CN.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/HK.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/TW.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/JP.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/KR.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/SG.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/MY.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/ID.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/KH.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/VN.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/TH.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/IN.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/PH.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/AT.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/DE.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/FR.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/IT.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/CH.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/ES.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/PT.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/PL.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/RU.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/TR.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/GG.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/CI.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/ZA.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/AX.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/NO.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/SE.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/BB.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/BS.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/HR.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/CZ.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/RO.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/HU.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/JO.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/IL.js"></script>
+  <script src="https://raw.githubusercontent.com/ehom/postal-address-data/master/addressData/PA.js"></script>
+  -->
+
+  <script crossorigin 
+          src="https://unpkg.com/react@16.13.1/umd/react.production.min.js"></script>
+  <script crossorigin 
+          src="https://unpkg.com/react-dom@16.13.1/umd/react-dom.production.min.js"></script>
+
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <script type="text/babel" src="jsx/components.jsx"></script>
+  <script type="text/babel" src="jsx/app.jsx"></script>
+</body>
+
+</html>
