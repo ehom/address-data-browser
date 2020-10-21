@@ -2,7 +2,7 @@ function App(properties) {
   return (
     <React.Fragment>
       <div className="jumbotron pt-4 pb-5">
-        <h1 className="mb-4">address data explorer</h1>
+        <h1 className="mb-4">address data browser</h1>
         <hr/>
         <div className="row mb-3">
           <div className="col sm-6">
