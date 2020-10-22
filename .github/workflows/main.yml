@@ -31,3 +31,12 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+
+      - name: JSX to JS
+        run: |
+          git pull
+          npm install
+          npm run-script build
+          git config --global user.name $GITHUB_ACTOR
+          git diff --quiet && git diff --staged --quiet || git commit -am 'update generated file'
+          git push
