@@ -11,7 +11,7 @@ function App(properties) {
   return (
     <React.Fragment>
       <div className="jumbotron pt-4 pb-5">
-        <h1 className="mb-4">{APP_NAME}</h1>
+        <h1 className="mb-4">{Strings.appName}</h1>
         <hr/>
         <div className="row mb-3">
           <div className="col sm-6">
