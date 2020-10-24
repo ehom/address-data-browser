@@ -19,7 +19,7 @@ function App(properties) {
       React.createElement(
         "h1",
         { className: "mb-4" },
-        APP_NAME
+        Strings.appName
       ),
       React.createElement("hr", null),
       React.createElement(
