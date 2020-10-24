@@ -1,6 +1,11 @@
-const APP_NAME = "address data explorer";
+const Strings = {
+  appName: "address data explorer",
+  selectCountry: "select country",
+  outputForm: "output form",
+  inputForm: "input form"
+};
 
-document.title = APP_NAME;
+document.title = Strings.appName;
 
 function App(properties) {
   return (
@@ -10,7 +15,7 @@ function App(properties) {
         <hr/>
         <div className="row mb-3">
           <div className="col sm-6">
-            <span className="text-muted">select country</span>
+            <span className="text-muted">{Strings.selectCountry}</span>
           </div>
         </div>
         <div className="row">
@@ -21,14 +26,14 @@ function App(properties) {
       </div>
       <div className="row mb-5">
         <div class="col-md-6 mb-4">
-          <h4>input form</h4>
+          <h4>{Strings.inputForm}</h4>
           <div className="container border border-dark rounded pt-4 pb-5">
             <p className="mb-2 text-muted">Local format</p>
             <div id="addressEntry"></div>
           </div>
         </div>
         <div className="col-md-6">
-          <h4>output form</h4>
+          <h4>{Strings.outputForm}</h4>
           <div className="container border border-dark rounded pt-4 pb-5">
              <p className="mb-2 text-muted">Local format</p>
              <div id="addressFormat"></div>
@@ -65,9 +70,8 @@ function CountrySelector(properties) {
   const options = Object.keys(properties.countries).map((code) => {
     if (properties.countries[code].name) {
       return <option value={code}>{properties.countries[code]['name']}</option>;
-    } else {
-      return <React.Fragment></React.Fragment>;
     }
+    return <React.Fragment></React.Fragment>;
   });
   
   return (
