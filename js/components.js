@@ -251,3 +251,25 @@ function AddressFormatter(countryCode) {
     }
   };
 }
+
+var CountrySelector = function CountrySelector(_ref) {
+  var countries = _ref.countries,
+      onChange = _ref.onChange;
+
+  var options = Object.keys(countries).map(function (code) {
+    if (countries[code].name) {
+      return React.createElement(
+        "option",
+        { value: code },
+        countries[code]['name']
+      );
+    }
+    return React.createElement(React.Fragment, null);
+  });
+
+  return React.createElement(
+    "select",
+    { id: "country-selector", className: "form-control", onChange: onChange },
+    options
+  );
+};
