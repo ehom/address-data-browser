@@ -7,7 +7,16 @@ const Strings = {
 
 document.title = Strings.appName;
 
-function App(properties) {
+const App = (properties) => {
+  const [country, setCountry] = React.useState('US');
+
+  const handleCountryChanged = (event) => {
+    setCountry(event.target.value);
+  };
+
+  // TODO: if inputting in the address entry form should update
+  // the address output panel, we need to add onChange hook to AddressEntryForm.
+
   return (
     <React.Fragment>
       <div className="jumbotron pt-4 pb-5">
@@ -20,7 +29,7 @@ function App(properties) {
         </div>
         <div className="row">
           <div className="col-sm-6">
-            <CountrySelector countries={properties.countries} onEffect={updateAddressFormat} />
+            <CountrySelector countries={properties.countries} onChange={handleCountryChanged} />
           </div>
         </div>
       </div>
@@ -29,61 +38,23 @@ function App(properties) {
           <h4>{Strings.inputForm}</h4>
           <div className="container border border-dark rounded pt-4 pb-5">
             <p className="mb-2 text-muted">Local format</p>
-            <div id="addressEntry"></div>
+            <div>
+              <AddressEntryForm countryCode={country} address={new Address()} />
+            </div>
           </div>
         </div>
         <div className="col-md-6">
           <h4>{Strings.outputForm}</h4>
           <div className="container border border-dark rounded pt-4 pb-5">
              <p className="mb-2 text-muted">Local format</p>
-             <div id="addressFormat"></div>
+             <div>
+               <AddressFormat countryCode={country} />
+             </div>
           </div>
         </div>
       </div>
     </React.Fragment>
   );
-}
-
+};
 
 ReactDOM.render(<App countries={ehom.i18n.addressData}/>, document.getElementById('app'));
-
-(function displayAddressFormat(countryCode) {
-  updateAddressFormat(countryCode);
-})('US');
-
-function CountrySelector(properties) {
-  const [inputText, setInputText] = React.useState('');
-  
-  const handleChange = (event) => {
-    setInputText(event.target.value);
-  };
-  
-  React.useEffect(() => {
-    console.debug("useEffect");
-
-    if (inputText.length > 0) {
-      console.debug(`Update output section with address format for ${inputText}`);
-      properties.onEffect(inputText);
-    }
-  });
-  
-  const options = Object.keys(properties.countries).map((code) => {
-    if (properties.countries[code].name) {
-      return <option value={code}>{properties.countries[code]['name']}</option>;
-    }
-    return <React.Fragment></React.Fragment>;
-  });
-  
-  return (
-    <select id="country-selector" className="form-control" onChange={handleChange}>
-      {options}
-    </select>
-  );
-}
-
-function updateAddressFormat(countryCode) {
-  console.debug("updateAddressFormat: ", countryCode);
-  ReactDOM.render(<AddressFormat countryCode={countryCode} />, document.getElementById('addressFormat'));
-  ReactDOM.render(<AddressEntryForm countryCode={countryCode} address={new Address()}/>, document.getElementById('addressEntry'));
-}
-
