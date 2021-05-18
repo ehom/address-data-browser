@@ -19,37 +19,34 @@ const App = (properties) => {
 
   return (
     <React.Fragment>
-      <div className="jumbotron pt-4 pb-5">
-        <h1 className="mb-4">{Strings.appName}</h1>
-        <hr/>
-        <div className="row mb-3">
-          <div className="col sm-6">
-            <span className="text-muted">{Strings.selectCountry}</span>
-          </div>
-        </div>
-        <div className="row">
-          <div className="col-sm-6">
+      <nav className="navbar navbar-light bg-light mb-5">
+        <div className="container-fluid">
+          <span class="navbar-text mb-0 h2">{Strings.appName}</span>
+          <form>
             <CountrySelector countries={properties.countries} onChange={handleCountryChanged} />
-          </div>
+          </form>
         </div>
-      </div>
-      <div className="row mb-5">
-        <div class="col-md-6 mb-4">
-          <h4>{Strings.inputForm}</h4>
-          <div className="container border border-dark rounded pt-4 pb-5">
-            <p className="mb-2 text-muted">Local format</p>
-            <div>
-              <AddressEntryForm countryCode={country} address={new Address()} />
+      </nav>
+
+      <div className="container">
+        <div className="row mb-5">
+          <div class="col-md-6 mb-4">
+            <h5>{Strings.inputForm}</h5>
+            <div className="container border border-dark rounded pt-4 pb-5">
+              <p className="mb-2 text-muted">Local format</p>
+              <div>
+                <AddressEntryForm countryCode={country} address={new Address()} />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="col-md-6">
-          <h4>{Strings.outputForm}</h4>
-          <div className="container border border-dark rounded pt-4 pb-5">
-             <p className="mb-2 text-muted">Local format</p>
-             <div>
-               <AddressFormat countryCode={country} />
-             </div>
+          <div className="col-md-6">
+            <h5>{Strings.outputForm}</h5>
+            <div className="container border border-dark rounded pt-4 pb-5">
+              <p className="mb-2 text-muted">Local format</p>
+              <div>
+                <AddressFormat countryCode={country} />
+              </div>
+            </div>
           </div>
         </div>
       </div>

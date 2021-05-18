@@ -26,83 +26,73 @@ var App = function App(properties) {
     React.Fragment,
     null,
     React.createElement(
-      "div",
-      { className: "jumbotron pt-4 pb-5" },
-      React.createElement(
-        "h1",
-        { className: "mb-4" },
-        Strings.appName
-      ),
-      React.createElement("hr", null),
+      "nav",
+      { className: "navbar navbar-light bg-light mb-5" },
       React.createElement(
         "div",
-        { className: "row mb-3" },
+        { className: "container-fluid" },
         React.createElement(
-          "div",
-          { className: "col sm-6" },
-          React.createElement(
-            "span",
-            { className: "text-muted" },
-            Strings.selectCountry
-          )
-        )
-      ),
-      React.createElement(
-        "div",
-        { className: "row" },
+          "span",
+          { "class": "navbar-text mb-0 h2" },
+          Strings.appName
+        ),
         React.createElement(
-          "div",
-          { className: "col-sm-6" },
+          "form",
+          null,
           React.createElement(CountrySelector, { countries: properties.countries, onChange: handleCountryChanged })
         )
       )
     ),
     React.createElement(
       "div",
-      { className: "row mb-5" },
+      { className: "container" },
       React.createElement(
         "div",
-        { "class": "col-md-6 mb-4" },
-        React.createElement(
-          "h4",
-          null,
-          Strings.inputForm
-        ),
+        { className: "row mb-5" },
         React.createElement(
           "div",
-          { className: "container border border-dark rounded pt-4 pb-5" },
+          { "class": "col-md-6 mb-4" },
           React.createElement(
-            "p",
-            { className: "mb-2 text-muted" },
-            "Local format"
+            "h5",
+            null,
+            Strings.inputForm
           ),
           React.createElement(
             "div",
-            null,
-            React.createElement(AddressEntryForm, { countryCode: country, address: new Address() })
+            { className: "container border border-dark rounded pt-4 pb-5" },
+            React.createElement(
+              "p",
+              { className: "mb-2 text-muted" },
+              "Local format"
+            ),
+            React.createElement(
+              "div",
+              null,
+              React.createElement(AddressEntryForm, { countryCode: country, address: new Address() })
+            )
           )
-        )
-      ),
-      React.createElement(
-        "div",
-        { className: "col-md-6" },
-        React.createElement(
-          "h4",
-          null,
-          Strings.outputForm
         ),
         React.createElement(
           "div",
-          { className: "container border border-dark rounded pt-4 pb-5" },
+          { className: "col-md-6" },
           React.createElement(
-            "p",
-            { className: "mb-2 text-muted" },
-            "Local format"
+            "h5",
+            null,
+            Strings.outputForm
           ),
           React.createElement(
             "div",
-            null,
-            React.createElement(AddressFormat, { countryCode: country })
+            { className: "container border border-dark rounded pt-4 pb-5" },
+            React.createElement(
+              "p",
+              { className: "mb-2 text-muted" },
+              "Local format"
+            ),
+            React.createElement(
+              "div",
+              null,
+              React.createElement(AddressFormat, { countryCode: country })
+            )
           )
         )
       )
