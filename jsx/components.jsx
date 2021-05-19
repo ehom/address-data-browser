@@ -212,10 +212,7 @@ function AddressFormatter(countryCode) {
 
 const CountrySelector = ({countries, onChange}) => {
   const options = Object.keys(countries).map((code) => {
-    if (countries[code].name) {
-      return <option value={code}>{countries[code]['name']}</option>;
-    }
-    return <React.Fragment></React.Fragment>;
+    return countries[code].name? <option key={code.id} value={code}>{countries[code]['name']}</option> : null;
   });
 
   return (
