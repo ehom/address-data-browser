@@ -57,7 +57,7 @@ function AddressEntryForm(properties) {
       return React.createElement(
         "p",
         { className: "mb-2" },
-        React.createElement("input", { type: "text", name: "name", autocomplete: "on", className: "form-control mb-0", placeholder: "name" })
+        React.createElement("input", { type: "text", name: "name", autoComplete: "on", className: "form-control mb-0", placeholder: "name" })
       );
     },
     organization: function organization() {
