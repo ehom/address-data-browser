@@ -41,7 +41,7 @@ function AddressEntryForm(properties) {
   const require = addressData.require || defaultData.require;
 
   const lookupTable = {
-    name: () => <p className="mb-2"><input type="text" name="name" autocomplete="on" className="form-control mb-0" placeholder="name" /></p>,
+    name: () => <p className="mb-2"><input type="text" name="name" autoComplete="on" className="form-control mb-0" placeholder="name" /></p>,
     organization: () => <p className="mb-2"><input type="text" className="form-control mb-0" placeholder="organization" /></p>,
     address: () => {
       const text = require.indexOf('A') >= 0 ? "address (required)" : "address";
