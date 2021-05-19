@@ -19,18 +19,18 @@ const App = (properties) => {
 
   return (
     <React.Fragment>
-      <nav className="navbar navbar-light bg-light mb-5">
+      <header className="navbar navbar-light bg-light mb-5">
         <div className="container-fluid">
-          <span class="navbar-text mb-0 h2">{Strings.appName}</span>
+          <span className="navbar-text mb-0 h2">{Strings.appName}</span>
           <form>
             <CountrySelector countries={properties.countries} onChange={handleCountryChanged} />
           </form>
         </div>
-      </nav>
+      </header>
 
-      <div className="container">
+      <main className="container">
         <div className="row mb-5">
-          <div class="col-md-6 mb-4">
+          <div className="col-md-6 mb-4">
             <h5>{Strings.inputForm}</h5>
             <div className="container border border-dark rounded pt-4 pb-5">
               <p className="mb-2 text-muted">Local format</p>
@@ -49,7 +49,7 @@ const App = (properties) => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </React.Fragment>
   );
 };

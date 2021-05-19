@@ -26,14 +26,14 @@ var App = function App(properties) {
     React.Fragment,
     null,
     React.createElement(
-      "nav",
+      "header",
       { className: "navbar navbar-light bg-light mb-5" },
       React.createElement(
         "div",
         { className: "container-fluid" },
         React.createElement(
           "span",
-          { "class": "navbar-text mb-0 h2" },
+          { className: "navbar-text mb-0 h2" },
           Strings.appName
         ),
         React.createElement(
@@ -44,14 +44,14 @@ var App = function App(properties) {
       )
     ),
     React.createElement(
-      "div",
+      "main",
       { className: "container" },
       React.createElement(
         "div",
         { className: "row mb-5" },
         React.createElement(
           "div",
-          { "class": "col-md-6 mb-4" },
+          { className: "col-md-6 mb-4" },
           React.createElement(
             "h5",
             null,
