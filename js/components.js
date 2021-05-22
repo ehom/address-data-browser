@@ -257,14 +257,11 @@ var CountrySelector = function CountrySelector(_ref) {
       onChange = _ref.onChange;
 
   var options = Object.keys(countries).map(function (code) {
-    if (countries[code].name) {
-      return React.createElement(
-        "option",
-        { value: code },
-        countries[code]['name']
-      );
-    }
-    return React.createElement(React.Fragment, null);
+    return countries[code].name ? React.createElement(
+      "option",
+      { key: code.id, value: code },
+      countries[code]['name']
+    ) : null;
   });
 
   return React.createElement(
