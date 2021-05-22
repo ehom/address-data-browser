@@ -14,10 +14,16 @@ function AddressFormat(properties) {
   // TODO: we might want to populate the new Address.
 
   const formatted = AddressFormatter(properties.countryCode).format(new Address());
-    
+
+  const TableRow = ({text}) => {
+    return (
+      <tr key={text.id}><td>{text}</td></tr>
+    );
+  };
+
   const result = formatted.map((line) => {
     return (
-      <tr><td>{line}</td></tr>
+      <TableRow key={line} text={line} />
     );
   });
 
@@ -41,14 +47,12 @@ function AddressEntryForm(properties) {
   const require = addressData.require || defaultData.require;
 
   const lookupTable = {
-    name: () => <p className="mb-2"><input type="text" name="name" autoComplete="on" className="form-control mb-0" placeholder="name" /></p>,
-    organization: () => <p className="mb-2"><input type="text" className="form-control mb-0" placeholder="organization" /></p>,
+    name: () => <input type="text" name="name" autoComplete="on" className="form-control mb-0" placeholder="name" />,
+    organization: () => <input type="text" className="form-control mb-0" placeholder="organization" />,
     address: () => {
       const text = require.indexOf('A') >= 0 ? "address (required)" : "address";
       return (
-        <p className="mb-2">
-          <input type="text" name="address-1" className="form-control mb-0" placeholder={text} required />
-        </p>
+        <input type="text" name="address-1" className="form-control mb-0" placeholder={text} required />
       );
     },
     city: () => {
@@ -56,17 +60,13 @@ function AddressEntryForm(properties) {
       text = require.indexOf('C') >= 0 ? `${text} (required)` : text;
 
       return (
-        <p className="mb-2">
-          <input type="text" name="city" className="form-control mb-0" placeholder={text} required />
-        </p>
+        <input type="text" name="city" className="form-control mb-0" placeholder={text} required />
       );
     },
     sublocality: () => {
       let temp = addressData.sublocality_name_type || defaultData.sublocality_name_type;
       return (
-        <p className="mb-2">
-          <input type="text" className="form-control mb-0" placeholder={temp} />
-        </p>
+        <input type="text" className="form-control mb-0" placeholder={temp} />
       );
     },
     state: () => {
@@ -91,26 +91,22 @@ function AddressEntryForm(properties) {
         }
 
         const options = sub_keys.map((sub_key, index) => {
-          return <option value={sub_key}>{sub_names[index]}</option>;
+          return <option key={sub_key} value={sub_key}>{sub_names[index]}</option>;
         });
 
         return (
-          <p className="mb-2">
-            <select className="form-control mb-0">
-              <option selected>{text}</option>
-              {options}
-            </select>
-          </p>
+          <select className="form-control mb-0">
+            <option key={text}>{text}</option>
+            {options}
+          </select>
         );
       }
 
       return (
-        <p className="mb-2">
-          <input type="text"
-            name="state"
-            className="form-control mb-0"
-            placeholder={text} value="" required />
-        </p>
+        <input type="text"
+          name="state"
+          className="form-control mb-0"
+          placeholder={text} value="" required />
       );
     },
     postalCode: () => {
@@ -119,22 +115,26 @@ function AddressEntryForm(properties) {
       let examples = addressData.zipex ? addressData.zipex.split(',').join(', ') : '';
 
       return (
-        <div className="mb-1">
+        <React.Fragment>
           <input type='text' name="zip" className='form-control mb-0' placeholder={zip_name} pattern={addressData.zip} />
           <p className="pl-3 mb-0"><small>Examples: {examples}</small></p>
-        </div>
+        </React.Fragment>
       );
     },
     'sortCode': () => {
       return (
-        <p className="mb-2">
-          <input type="text" className="form-control mb-0" placeholder="sort code" />
-        </p>
+        <input type="text" className="form-control mb-0" placeholder="sort code" />
       );
     }
   };
 
-  const output = parts.map((part) => lookupTable[part.type]());
+  const output = parts.map((part) => {
+    return (
+      <div className="mb-2" key={part.type}>
+        {lookupTable[part.type]()}
+      </div>
+    );
+  });
   console.debug("form: ", output);
 
   return (
@@ -210,13 +210,18 @@ function AddressFormatter(countryCode) {
   };
 }
 
+function CountryOption({code, countryName}) {
+  return <option value={code}>{countryName}</option>;
+}
+
 const CountrySelector = ({countries, onChange}) => {
   const options = Object.keys(countries).map((code) => {
-    return countries[code].name? <option key={code.id} value={code}>{countries[code]['name']}</option> : null;
+    return countries[code].name ?
+    <CountryOption key={code} code={code} countryName={countries[code]['name']} /> : null;
   });
 
   return (
-    <select id="country-selector" className="form-control" onChange={onChange}>
+    <select id="country-selector" className="form-control" defaultValue='US' onChange={onChange}>
       {options}
     </select>
   );
