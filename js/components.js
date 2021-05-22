@@ -17,16 +17,22 @@ function AddressFormat(properties) {
 
   var formatted = AddressFormatter(properties.countryCode).format(new Address());
 
-  var result = formatted.map(function (line) {
+  var TableRow = function TableRow(_ref) {
+    var text = _ref.text;
+
     return React.createElement(
       "tr",
-      null,
+      { key: text.id },
       React.createElement(
         "td",
         null,
-        line
+        text
       )
     );
+  };
+
+  var result = formatted.map(function (line) {
+    return React.createElement(TableRow, { key: line, text: line });
   });
 
   return React.createElement(
@@ -54,44 +60,24 @@ function AddressEntryForm(properties) {
 
   var lookupTable = {
     name: function name() {
-      return React.createElement(
-        "p",
-        { className: "mb-2" },
-        React.createElement("input", { type: "text", name: "name", autoComplete: "on", className: "form-control mb-0", placeholder: "name" })
-      );
+      return React.createElement("input", { type: "text", name: "name", autoComplete: "on", className: "form-control mb-0", placeholder: "name" });
     },
     organization: function organization() {
-      return React.createElement(
-        "p",
-        { className: "mb-2" },
-        React.createElement("input", { type: "text", className: "form-control mb-0", placeholder: "organization" })
-      );
+      return React.createElement("input", { type: "text", className: "form-control mb-0", placeholder: "organization" });
     },
     address: function address() {
       var text = require.indexOf('A') >= 0 ? "address (required)" : "address";
-      return React.createElement(
-        "p",
-        { className: "mb-2" },
-        React.createElement("input", { type: "text", name: "address-1", className: "form-control mb-0", placeholder: text, required: true })
-      );
+      return React.createElement("input", { type: "text", name: "address-1", className: "form-control mb-0", placeholder: text, required: true });
     },
     city: function city() {
       var text = addressData.locality_name_type || defaultData.locality_name_type;
       text = require.indexOf('C') >= 0 ? text + " (required)" : text;
 
-      return React.createElement(
-        "p",
-        { className: "mb-2" },
-        React.createElement("input", { type: "text", name: "city", className: "form-control mb-0", placeholder: text, required: true })
-      );
+      return React.createElement("input", { type: "text", name: "city", className: "form-control mb-0", placeholder: text, required: true });
     },
     sublocality: function sublocality() {
       var temp = addressData.sublocality_name_type || defaultData.sublocality_name_type;
-      return React.createElement(
-        "p",
-        { className: "mb-2" },
-        React.createElement("input", { type: "text", className: "form-control mb-0", placeholder: temp })
-      );
+      return React.createElement("input", { type: "text", className: "form-control mb-0", placeholder: temp });
     },
     state: function state() {
       var text = addressData.state_name_type || defaultData.state_name_type;
@@ -117,35 +103,27 @@ function AddressEntryForm(properties) {
         var options = sub_keys.map(function (sub_key, index) {
           return React.createElement(
             "option",
-            { value: sub_key },
+            { key: sub_key, value: sub_key },
             sub_names[index]
           );
         });
 
         return React.createElement(
-          "p",
-          { className: "mb-2" },
+          "select",
+          { className: "form-control mb-0" },
           React.createElement(
-            "select",
-            { className: "form-control mb-0" },
-            React.createElement(
-              "option",
-              { selected: true },
-              text
-            ),
-            options
-          )
+            "option",
+            { key: text },
+            text
+          ),
+          options
         );
       }
 
-      return React.createElement(
-        "p",
-        { className: "mb-2" },
-        React.createElement("input", { type: "text",
-          name: "state",
-          className: "form-control mb-0",
-          placeholder: text, value: "", required: true })
-      );
+      return React.createElement("input", { type: "text",
+        name: "state",
+        className: "form-control mb-0",
+        placeholder: text, value: "", required: true });
     },
     postalCode: function postalCode() {
       var zip_name = addressData.zip_name_type || defaultData.zip_name_type;
@@ -153,8 +131,8 @@ function AddressEntryForm(properties) {
       var examples = addressData.zipex ? addressData.zipex.split(',').join(', ') : '';
 
       return React.createElement(
-        "div",
-        { className: "mb-1" },
+        React.Fragment,
+        null,
         React.createElement("input", { type: "text", name: "zip", className: "form-control mb-0", placeholder: zip_name, pattern: addressData.zip }),
         React.createElement(
           "p",
@@ -169,16 +147,16 @@ function AddressEntryForm(properties) {
       );
     },
     'sortCode': function sortCode() {
-      return React.createElement(
-        "p",
-        { className: "mb-2" },
-        React.createElement("input", { type: "text", className: "form-control mb-0", placeholder: "sort code" })
-      );
+      return React.createElement("input", { type: "text", className: "form-control mb-0", placeholder: "sort code" });
     }
   };
 
   var output = parts.map(function (part) {
-    return lookupTable[part.type]();
+    return React.createElement(
+      "div",
+      { className: "mb-2", key: part.type },
+      lookupTable[part.type]()
+    );
   });
   console.debug("form: ", output);
 
@@ -252,21 +230,28 @@ function AddressFormatter(countryCode) {
   };
 }
 
-var CountrySelector = function CountrySelector(_ref) {
-  var countries = _ref.countries,
-      onChange = _ref.onChange;
+function CountryOption(_ref2) {
+  var code = _ref2.code,
+      countryName = _ref2.countryName;
+
+  return React.createElement(
+    "option",
+    { value: code },
+    countryName
+  );
+}
+
+var CountrySelector = function CountrySelector(_ref3) {
+  var countries = _ref3.countries,
+      onChange = _ref3.onChange;
 
   var options = Object.keys(countries).map(function (code) {
-    return countries[code].name ? React.createElement(
-      "option",
-      { key: code.id, value: code },
-      countries[code]['name']
-    ) : null;
+    return countries[code].name ? React.createElement(CountryOption, { key: code, code: code, countryName: countries[code]['name'] }) : null;
   });
 
   return React.createElement(
     "select",
-    { id: "country-selector", className: "form-control", onChange: onChange },
+    { id: "country-selector", className: "form-control", defaultValue: "US", onChange: onChange },
     options
   );
 };
