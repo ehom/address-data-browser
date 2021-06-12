@@ -42,10 +42,12 @@ function AddressEntryForm({countryCode, address}) {
   const localFormat = true;
 
   const country = new AddressMetadata(countryCode);
+  console.debug("country metadata:", country);
 
   let {
-    require, locality_name_type, sublocality_name_type, state_name_type,
-    sub_keys, sub_name, sub_lnames,
+    require,
+    locality_name_type, sublocality_name_type, state_name_type,
+    sub_keys, sub_lnames,
     zip_name_type, zipex
   } = country;
 
@@ -221,18 +223,16 @@ function AddressFormatter(countryCode) {
   };
 }
 
-function CountryOption({code, countryName}) {
-  return <option value={code}>{countryName}</option>;
-}
-
-const CountrySelector = ({countries, onChange}) => {
+const CountrySelector = ({countries, onChange, defaultValue}) => {
   const options = Object.keys(countries).map((code) => {
-    return countries[code].name ?
-    <CountryOption key={code} code={code} countryName={countries[code]['name']} /> : null;
+    if (defaultValue === code) {
+      return <option value={code} selected>{countries[code]['name']}</option>;
+    }
+    return <option value={code}>{countries[code]['name']}</option>;
   });
 
   return (
-    <select id="country-selector" className="form-control" defaultValue='US' onChange={onChange}>
+    <select id="country-selector" className="form-control" onChange={onChange}>
       {options}
     </select>
   );
