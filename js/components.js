@@ -58,7 +58,16 @@ function AddressEntryForm(_ref2) {
 
   var country = new AddressMetadata(countryCode);
 
-  var require = country.require;
+  var require = country.require,
+      locality_name_type = country.locality_name_type,
+      sublocality_name_type = country.sublocality_name_type,
+      state_name_type = country.state_name_type,
+      sub_keys = country.sub_keys,
+      sub_name = country.sub_name,
+      sub_lnames = country.sub_lnames,
+      zip_name_type = country.zip_name_type,
+      zipex = country.zipex;
+
 
   var lookupTable = {
     name: function name() {
@@ -72,22 +81,21 @@ function AddressEntryForm(_ref2) {
       return React.createElement("input", { type: "text", name: "address-1", className: "form-control mb-0", placeholder: text, required: true });
     },
     city: function city() {
-      var text = country.locality_name_type;
+      var text = locality_name_type;
       text = require.indexOf('C') >= 0 ? text + " (required)" : text;
 
       return React.createElement("input", { type: "text", name: "city", className: "form-control mb-0", placeholder: text, required: true });
     },
     sublocality: function sublocality() {
-      var temp = country.sublocality_name_type;
-      return React.createElement("input", { type: "text", className: "form-control mb-0", placeholder: temp });
+      return React.createElement("input", { type: "text", className: "form-control mb-0", placeholder: sublocality_name_type });
     },
     state: function state() {
-      var text = country.state_name_type;
+      var text = state_name_type;
       text = require.indexOf('S') >= 0 ? text + " (required)" : text;
 
       // if sub_keys exists, that means there is a list available
-      if (country.sub_keys) {
-        var sub_keys = country.sub_keys.split('~');
+      if (sub_keys) {
+        sub_keys = sub_keys.split('~');
         console.debug(sub_keys);
 
         // if local format is required
@@ -96,8 +104,8 @@ function AddressEntryForm(_ref2) {
         var sub_names = [];
         if (country.sub_names) {
           sub_names = country.sub_names.split('~');
-        } else if (!localFormat && country.sub_lnames) {
-          sub_names = country.sub_lnames.split('~');
+        } else if (!localFormat && sub_lnames) {
+          sub_names = sub_lnames.split('~');
         } else {
           sub_names = sub_keys;
         }
@@ -128,14 +136,14 @@ function AddressEntryForm(_ref2) {
         placeholder: text, value: "", required: true });
     },
     postalCode: function postalCode() {
-      var zip_name = country.zip_name_type;
+      var zip_name = zip_name_type;
       zip_name = require.indexOf('Z') >= 0 ? zip_name + " code required" : zip_name + " code";
-      var examples = country.zipex ? country.zipex.split(',').join(', ') : '';
+      var examples = zipex ? zipex.split(',').join(', ') : '';
 
       return React.createElement(
         React.Fragment,
         null,
-        React.createElement("input", { type: "text", name: "zip", className: "form-control mb-0", placeholder: zip_name, pattern: country.zipex }),
+        React.createElement("input", { type: "text", name: "zip", className: "form-control mb-0", placeholder: zip_name, pattern: zipex }),
         React.createElement(
           "p",
           { className: "pl-3 mb-0" },
@@ -183,15 +191,18 @@ function AddressEntryForm(_ref2) {
 
 function AddressFormatter(countryCode) {
   var country = new AddressMetadata(countryCode);
+
+  var sublocality_name_type = country.sublocality_name_type,
+      locality_name_type = country.locality_name_type,
+      state_name_type = country.state_name_type,
+      fmt = country.fmt,
+      upper = country.upper;
+
+
   return {
     format: function format(object) {
-      var upperRequired = country.upper;
-
-      // Read the format string from the locale data
-      var fmt = country.fmt;
-
       var upperCase = function upperCase(fieldType, text) {
-        return upperRequired.indexOf(fieldType) >= 0 ? text.toUpperCase() : text;
+        return upper.indexOf(fieldType) >= 0 ? text.toUpperCase() : text;
       };
 
       var address = brackets('address');
@@ -204,11 +215,10 @@ function AddressFormatter(countryCode) {
       name = upperCase("N", name);
       sortCode = upperCase("X", sortCode);
 
-      var locality_name_type = country.locality_name_type;
-      var state_name_type = country.state_name_type;
-      var sublocality_name_type = country.sublocality_name_type;
       var zip_name_type = country.zip_name_type;
       zip_name_type = zip_name_type + " code";
+
+      // Read the format string from the metadata
 
       var output = fmt.replace("%N", name).replace("%O", org).replace("%A", address).replace(/%n/g, '\n').replace(/%X/g, sortCode).replace('%C', brackets(upperCase("C", locality_name_type))).replace("%S", brackets(upperCase("S", state_name_type))).replace("%D", brackets(upperCase("D", sublocality_name_type))).replace("%Z", brackets(upperCase("Z", zip_name_type)));
       return output.split("\n");
