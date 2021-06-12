@@ -155,7 +155,7 @@ function AddressFormatter(countryCode) {
   const country = new AddressMetadata(countryCode);
   return {
     format: function(object) {
-      const upperRequired = country.upperRequired;
+      const upperRequired = country.upper;
 
       // Read the format string from the locale data
       const fmt = country.fmt;
