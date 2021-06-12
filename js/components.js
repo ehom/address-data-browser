@@ -46,17 +46,19 @@ function AddressFormat(properties) {
   );
 }
 
-function AddressEntryForm(properties) {
-  var parts = AddressFormatter(properties.countryCode).formatToParts(properties.address);
+function AddressEntryForm(_ref2) {
+  var countryCode = _ref2.countryCode,
+      address = _ref2.address;
+
+  var parts = AddressFormatter(countryCode).formatToParts(address);
   console.debug(parts);
 
   // TODO: need to get specified format passed down
   var localFormat = true;
 
-  var addressData = ehom.i18n.addressData[properties.countryCode];
-  var defaultData = ehom.i18n.addressData['ZZ'];
+  var country = new AddressMetadata(countryCode);
 
-  var require = addressData.require || defaultData.require;
+  var require = country.require;
 
   var lookupTable = {
     name: function name() {
@@ -70,32 +72,32 @@ function AddressEntryForm(properties) {
       return React.createElement("input", { type: "text", name: "address-1", className: "form-control mb-0", placeholder: text, required: true });
     },
     city: function city() {
-      var text = addressData.locality_name_type || defaultData.locality_name_type;
+      var text = country.locality_name_type;
       text = require.indexOf('C') >= 0 ? text + " (required)" : text;
 
       return React.createElement("input", { type: "text", name: "city", className: "form-control mb-0", placeholder: text, required: true });
     },
     sublocality: function sublocality() {
-      var temp = addressData.sublocality_name_type || defaultData.sublocality_name_type;
+      var temp = country.sublocality_name_type;
       return React.createElement("input", { type: "text", className: "form-control mb-0", placeholder: temp });
     },
     state: function state() {
-      var text = addressData.state_name_type || defaultData.state_name_type;
+      var text = country.state_name_type;
       text = require.indexOf('S') >= 0 ? text + " (required)" : text;
 
       // if sub_keys exists, that means there is a list available
-      if (addressData.sub_keys) {
-        var sub_keys = addressData.sub_keys.split('~');
+      if (country.sub_keys) {
+        var sub_keys = country.sub_keys.split('~');
         console.debug(sub_keys);
 
         // if local format is required
         // check sub_names first
 
         var sub_names = [];
-        if (addressData.sub_names) {
-          sub_names = addressData.sub_names.split('~');
-        } else if (!localFormat && addressData.sub_lnames) {
-          sub_names = addressData.sub_lnames.split('~');
+        if (country.sub_names) {
+          sub_names = country.sub_names.split('~');
+        } else if (!localFormat && country.sub_lnames) {
+          sub_names = country.sub_lnames.split('~');
         } else {
           sub_names = sub_keys;
         }
@@ -126,14 +128,14 @@ function AddressEntryForm(properties) {
         placeholder: text, value: "", required: true });
     },
     postalCode: function postalCode() {
-      var zip_name = addressData.zip_name_type || defaultData.zip_name_type;
+      var zip_name = country.zip_name_type;
       zip_name = require.indexOf('Z') >= 0 ? zip_name + " code required" : zip_name + " code";
-      var examples = addressData.zipex ? addressData.zipex.split(',').join(', ') : '';
+      var examples = country.zipex ? country.zipex.split(',').join(', ') : '';
 
       return React.createElement(
         React.Fragment,
         null,
-        React.createElement("input", { type: "text", name: "zip", className: "form-control mb-0", placeholder: zip_name, pattern: addressData.zip }),
+        React.createElement("input", { type: "text", name: "zip", className: "form-control mb-0", placeholder: zip_name, pattern: country.zipex }),
         React.createElement(
           "p",
           { className: "pl-3 mb-0" },
@@ -172,15 +174,21 @@ function AddressEntryForm(properties) {
 }
 
 // The following code can go into a separate file (jsx)
+
+/**
+ * description goes here
+ * @param {string} countryCode
+ * @returns {object}
+ */
+
 function AddressFormatter(countryCode) {
+  var country = new AddressMetadata(countryCode);
   return {
     format: function format(object) {
-      var addressData = ehom.i18n.addressData[countryCode];
-      var defaultData = ehom.i18n.addressData['ZZ'];
-      var upperRequired = addressData.upper || defaultData.upper;
+      var upperRequired = country.upperRequired;
 
       // Read the format string from the locale data
-      var fmt = addressData.fmt || defaultData.fmt;
+      var fmt = country.fmt;
 
       var upperCase = function upperCase(fieldType, text) {
         return upperRequired.indexOf(fieldType) >= 0 ? text.toUpperCase() : text;
@@ -196,10 +204,10 @@ function AddressFormatter(countryCode) {
       name = upperCase("N", name);
       sortCode = upperCase("X", sortCode);
 
-      var locality_name_type = addressData.locality_name_type || defaultData.locality_name_type;
-      var state_name_type = addressData['state_name_type'] || defaultData.state_name_type;
-      var sublocality_name_type = addressData.sublocality_name_type || defaultData.sublocality_name_type;
-      var zip_name_type = addressData.zip_name_type || defaultData.zip_name_type;
+      var locality_name_type = country.locality_name_type;
+      var state_name_type = country.state_name_type;
+      var sublocality_name_type = country.sublocality_name_type;
+      var zip_name_type = country.zip_name_type;
       zip_name_type = zip_name_type + " code";
 
       var output = fmt.replace("%N", name).replace("%O", org).replace("%A", address).replace(/%n/g, '\n').replace(/%X/g, sortCode).replace('%C', brackets(upperCase("C", locality_name_type))).replace("%S", brackets(upperCase("S", state_name_type))).replace("%D", brackets(upperCase("D", sublocality_name_type))).replace("%Z", brackets(upperCase("Z", zip_name_type)));
@@ -207,7 +215,7 @@ function AddressFormatter(countryCode) {
     },
 
     formatToParts: function formatToParts(object) {
-      var fmt = ehom.i18n.addressData[countryCode].fmt;
+      var fmt = country.fmt;
       var parts = fmt.match(/%[N,O,A,D,C,S,Z,X]/g);
       console.debug(parts);
 
@@ -230,9 +238,9 @@ function AddressFormatter(countryCode) {
   };
 }
 
-function CountryOption(_ref2) {
-  var code = _ref2.code,
-      countryName = _ref2.countryName;
+function CountryOption(_ref3) {
+  var code = _ref3.code,
+      countryName = _ref3.countryName;
 
   return React.createElement(
     "option",
@@ -241,9 +249,9 @@ function CountryOption(_ref2) {
   );
 }
 
-var CountrySelector = function CountrySelector(_ref3) {
-  var countries = _ref3.countries,
-      onChange = _ref3.onChange;
+var CountrySelector = function CountrySelector(_ref4) {
+  var countries = _ref4.countries,
+      onChange = _ref4.onChange;
 
   var options = Object.keys(countries).map(function (code) {
     return countries[code].name ? React.createElement(CountryOption, { key: code, code: code, countryName: countries[code]['name'] }) : null;
