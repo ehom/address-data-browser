@@ -57,13 +57,13 @@ function AddressEntryForm(_ref2) {
   var localFormat = true;
 
   var country = new AddressMetadata(countryCode);
+  console.debug("country metadata:", country);
 
   var require = country.require,
       locality_name_type = country.locality_name_type,
       sublocality_name_type = country.sublocality_name_type,
       state_name_type = country.state_name_type,
       sub_keys = country.sub_keys,
-      sub_name = country.sub_name,
       sub_lnames = country.sub_lnames,
       zip_name_type = country.zip_name_type,
       zipex = country.zipex;
@@ -248,28 +248,29 @@ function AddressFormatter(countryCode) {
   };
 }
 
-function CountryOption(_ref3) {
-  var code = _ref3.code,
-      countryName = _ref3.countryName;
-
-  return React.createElement(
-    "option",
-    { value: code },
-    countryName
-  );
-}
-
-var CountrySelector = function CountrySelector(_ref4) {
-  var countries = _ref4.countries,
-      onChange = _ref4.onChange;
+var CountrySelector = function CountrySelector(_ref3) {
+  var countries = _ref3.countries,
+      onChange = _ref3.onChange,
+      defaultValue = _ref3.defaultValue;
 
   var options = Object.keys(countries).map(function (code) {
-    return countries[code].name ? React.createElement(CountryOption, { key: code, code: code, countryName: countries[code]['name'] }) : null;
+    if (defaultValue === code) {
+      return React.createElement(
+        "option",
+        { value: code, selected: true },
+        countries[code]['name']
+      );
+    }
+    return React.createElement(
+      "option",
+      { value: code },
+      countries[code]['name']
+    );
   });
 
   return React.createElement(
     "select",
-    { id: "country-selector", className: "form-control", defaultValue: "US", onChange: onChange },
+    { id: "country-selector", className: "form-control", onChange: onChange },
     options
   );
 };
