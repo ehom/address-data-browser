@@ -1,5 +1,5 @@
 const Strings = {
-  appName: "address data explorer",
+  appName: "address metadata explorer",
   selectCountry: "select country",
   outputForm: "output form",
   inputForm: "input form"
