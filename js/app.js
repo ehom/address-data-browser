@@ -15,6 +15,11 @@ var App = function App(properties) {
       country = _React$useState2[0],
       setCountry = _React$useState2[1];
 
+  var _React$useState3 = React.useState(false),
+      _React$useState4 = _slicedToArray(_React$useState3, 2),
+      intlAddress = _React$useState4[0],
+      setIntlAddress = _React$useState4[1];
+
   var handleCountryChanged = function handleCountryChanged(event) {
     setCountry(event.target.value);
   };
