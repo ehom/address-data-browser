@@ -9,6 +9,7 @@ document.title = Strings.appName;
 
 const App = (properties) => {
   const [country, setCountry] = React.useState('US');
+  const [intlAddress, setIntlAddress] = React.useState(false);
 
   const handleCountryChanged = (event) => {
     setCountry(event.target.value);

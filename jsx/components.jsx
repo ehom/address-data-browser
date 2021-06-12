@@ -43,7 +43,11 @@ function AddressEntryForm({countryCode, address}) {
 
   const country = new AddressMetadata(countryCode);
 
-  const require = country.require;
+  let {
+    require, locality_name_type, sublocality_name_type, state_name_type,
+    sub_keys, sub_name, sub_lnames,
+    zip_name_type, zipex
+  } = country;
 
   const lookupTable = {
     name: () => <input type="text" name="name" autoComplete="on" className="form-control mb-0" placeholder="name" />,
@@ -55,7 +59,7 @@ function AddressEntryForm({countryCode, address}) {
       );
     },
     city: () => {
-      let text = country.locality_name_type;
+      let text = locality_name_type;
       text = require.indexOf('C') >= 0 ? `${text} (required)` : text;
 
       return (
@@ -63,18 +67,17 @@ function AddressEntryForm({countryCode, address}) {
       );
     },
     sublocality: () => {
-      let temp = country.sublocality_name_type;
       return (
-        <input type="text" className="form-control mb-0" placeholder={temp} />
+        <input type="text" className="form-control mb-0" placeholder={sublocality_name_type} />
       );
     },
     state: () => {
-      let text = country.state_name_type;
+      let text = state_name_type;
       text = require.indexOf('S') >= 0 ? `${text} (required)` : text;
 
       // if sub_keys exists, that means there is a list available
-      if (country.sub_keys) {
-        const sub_keys = country.sub_keys.split('~');
+      if (sub_keys) {
+        sub_keys = sub_keys.split('~');
         console.debug(sub_keys);
 
         // if local format is required
@@ -83,8 +86,8 @@ function AddressEntryForm({countryCode, address}) {
         let sub_names = [];
         if (country.sub_names) {
            sub_names = country.sub_names.split('~');
-        } else if (!localFormat && country.sub_lnames) {
-           sub_names = country.sub_lnames.split('~');
+        } else if (!localFormat && sub_lnames) {
+           sub_names = sub_lnames.split('~');
         } else {
            sub_names = sub_keys;
         }
@@ -109,13 +112,13 @@ function AddressEntryForm({countryCode, address}) {
       );
     },
     postalCode: () => {
-      let zip_name = country.zip_name_type;
+      let zip_name = zip_name_type;
       zip_name = require.indexOf('Z') >= 0 ? `${zip_name} code required` : `${zip_name} code`;
-      let examples = country.zipex ? country.zipex.split(',').join(', ') : '';
+      let examples = zipex ? zipex.split(',').join(', ') : '';
 
       return (
         <React.Fragment>
-          <input type='text' name="zip" className='form-control mb-0' placeholder={zip_name} pattern={country.zipex} />
+          <input type='text' name="zip" className='form-control mb-0' placeholder={zip_name} pattern={zipex} />
           <p className="pl-3 mb-0"><small>Examples: {examples}</small></p>
         </React.Fragment>
       );
@@ -153,15 +156,19 @@ function AddressEntryForm({countryCode, address}) {
 
 function AddressFormatter(countryCode) {
   const country = new AddressMetadata(countryCode);
+
+  const {
+    sublocality_name_type,
+    locality_name_type,
+    state_name_type,
+    fmt,
+    upper
+  } = country;
+
   return {
     format: function(object) {
-      const upperRequired = country.upper;
-
-      // Read the format string from the locale data
-      const fmt = country.fmt;
-
       const upperCase = (fieldType, text) => {
-        return (upperRequired.indexOf(fieldType) >= 0) ?
+        return (upper.indexOf(fieldType) >= 0) ?
           text.toUpperCase() : text;
       };
 
@@ -175,11 +182,10 @@ function AddressFormatter(countryCode) {
       name = upperCase("N", name);
       sortCode = upperCase("X", sortCode);
 
-      let locality_name_type = country.locality_name_type;
-      let state_name_type = country.state_name_type;
-      let sublocality_name_type = country.sublocality_name_type;
       let zip_name_type = country.zip_name_type;
       zip_name_type = `${zip_name_type} code`;
+
+      // Read the format string from the metadata
 
       let output = fmt.replace("%N", name)
                       .replace("%O", org)
