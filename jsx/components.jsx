@@ -34,17 +34,16 @@ function AddressFormat(properties) {
   );
 }
 
-function AddressEntryForm(properties) {
-  const parts = AddressFormatter(properties.countryCode).formatToParts(properties.address);
+function AddressEntryForm({countryCode, address}) {
+  const parts = AddressFormatter(countryCode).formatToParts(address);
   console.debug(parts);
 
   // TODO: need to get specified format passed down
   const localFormat = true;
 
-  const addressData = ehom.i18n.addressData[properties.countryCode];
-  const defaultData = ehom.i18n.addressData['ZZ'];
+  const country = new AddressMetadata(countryCode);
 
-  const require = addressData.require || defaultData.require;
+  const require = country.require;
 
   const lookupTable = {
     name: () => <input type="text" name="name" autoComplete="on" className="form-control mb-0" placeholder="name" />,
@@ -56,7 +55,7 @@ function AddressEntryForm(properties) {
       );
     },
     city: () => {
-      let text = addressData.locality_name_type || defaultData.locality_name_type;
+      let text = country.locality_name_type;
       text = require.indexOf('C') >= 0 ? `${text} (required)` : text;
 
       return (
@@ -64,28 +63,28 @@ function AddressEntryForm(properties) {
       );
     },
     sublocality: () => {
-      let temp = addressData.sublocality_name_type || defaultData.sublocality_name_type;
+      let temp = country.sublocality_name_type;
       return (
         <input type="text" className="form-control mb-0" placeholder={temp} />
       );
     },
     state: () => {
-      let text = addressData.state_name_type || defaultData.state_name_type;
+      let text = country.state_name_type;
       text = require.indexOf('S') >= 0 ? `${text} (required)` : text;
 
       // if sub_keys exists, that means there is a list available
-      if (addressData.sub_keys) {
-        const sub_keys = addressData.sub_keys.split('~');
+      if (country.sub_keys) {
+        const sub_keys = country.sub_keys.split('~');
         console.debug(sub_keys);
 
         // if local format is required
         // check sub_names first
 
         let sub_names = [];
-        if (addressData.sub_names) {
-           sub_names = addressData.sub_names.split('~');
-        } else if (!localFormat && addressData.sub_lnames) {
-           sub_names = addressData.sub_lnames.split('~');
+        if (country.sub_names) {
+           sub_names = country.sub_names.split('~');
+        } else if (!localFormat && country.sub_lnames) {
+           sub_names = country.sub_lnames.split('~');
         } else {
            sub_names = sub_keys;
         }
@@ -110,13 +109,13 @@ function AddressEntryForm(properties) {
       );
     },
     postalCode: () => {
-      let zip_name = addressData.zip_name_type || defaultData.zip_name_type;
+      let zip_name = country.zip_name_type;
       zip_name = require.indexOf('Z') >= 0 ? `${zip_name} code required` : `${zip_name} code`;
-      let examples = addressData.zipex ? addressData.zipex.split(',').join(', ') : '';
+      let examples = country.zipex ? country.zipex.split(',').join(', ') : '';
 
       return (
         <React.Fragment>
-          <input type='text' name="zip" className='form-control mb-0' placeholder={zip_name} pattern={addressData.zip} />
+          <input type='text' name="zip" className='form-control mb-0' placeholder={zip_name} pattern={country.zipex} />
           <p className="pl-3 mb-0"><small>Examples: {examples}</small></p>
         </React.Fragment>
       );
@@ -145,15 +144,21 @@ function AddressEntryForm(properties) {
 }
 
 // The following code can go into a separate file (jsx)
+
+/**
+ * description goes here
+ * @param {string} countryCode
+ * @returns {object}
+ */
+
 function AddressFormatter(countryCode) {
+  const country = new AddressMetadata(countryCode);
   return {
     format: function(object) {
-      const addressData = ehom.i18n.addressData[countryCode];
-      const defaultData = ehom.i18n.addressData['ZZ'];
-      const upperRequired = addressData.upper || defaultData.upper;
+      const upperRequired = country.upperRequired;
 
       // Read the format string from the locale data
-      const fmt = addressData.fmt || defaultData.fmt;
+      const fmt = country.fmt;
 
       const upperCase = (fieldType, text) => {
         return (upperRequired.indexOf(fieldType) >= 0) ?
@@ -170,10 +175,10 @@ function AddressFormatter(countryCode) {
       name = upperCase("N", name);
       sortCode = upperCase("X", sortCode);
 
-      let locality_name_type = addressData.locality_name_type || defaultData.locality_name_type;
-      let state_name_type = addressData['state_name_type'] || defaultData.state_name_type;
-      let sublocality_name_type = addressData.sublocality_name_type || defaultData.sublocality_name_type;
-      let zip_name_type = addressData.zip_name_type || defaultData.zip_name_type;
+      let locality_name_type = country.locality_name_type;
+      let state_name_type = country.state_name_type;
+      let sublocality_name_type = country.sublocality_name_type;
+      let zip_name_type = country.zip_name_type;
       zip_name_type = `${zip_name_type} code`;
 
       let output = fmt.replace("%N", name)
@@ -189,7 +194,7 @@ function AddressFormatter(countryCode) {
     },
 
     formatToParts: function(object) {
-      const fmt = ehom.i18n.addressData[countryCode].fmt;
+      const fmt = country.fmt;
       const parts = fmt.match(/%[N,O,A,D,C,S,Z,X]/g);
       console.debug(parts);
 
