@@ -1,4 +1,10 @@
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Strings = {
   appName: "address metadata explorer",
@@ -9,100 +15,136 @@ var Strings = {
 
 document.title = Strings.appName;
 
-var App = function App(properties) {
-  var _React$useState = React.useState('US'),
-      _React$useState2 = _slicedToArray(_React$useState, 2),
-      country = _React$useState2[0],
-      setCountry = _React$useState2[1];
+var App = function (_React$Component) {
+  _inherits(App, _React$Component);
 
-  var _React$useState3 = React.useState(false),
-      _React$useState4 = _slicedToArray(_React$useState3, 2),
-      intlAddress = _React$useState4[0],
-      setIntlAddress = _React$useState4[1];
+  function App(properties) {
+    _classCallCheck(this, App);
 
-  var handleCountryChanged = function handleCountryChanged(event) {
-    setCountry(event.target.value);
-  };
+    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, properties));
 
-  // TODO: if inputting in the address entry form should update
-  // the address output panel, we need to add onChange hook to AddressEntryForm.
+    _this.state = {
+      country: 'US',
+      intlAddress: false
+    };
 
-  return React.createElement(
-    React.Fragment,
-    null,
-    React.createElement(
-      "header",
-      { className: "navbar navbar-light bg-light mb-5" },
-      React.createElement(
-        "div",
-        { className: "container-fluid" },
+    _this.handleCountryChanged = function (event) {
+      _this.setState({
+        country: event.target.value
+      });
+      window.sessionStorage.setItem('country', event.target.value);
+    };
+
+    return _this;
+  }
+
+  _createClass(App, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      console.debug('check window session storage');
+      var storage = window.sessionStorage;
+
+      console.debug("win storage:", storage);
+
+      if (storage.getItem('country')) {
+        this.setState({
+          country: storage.getItem('country')
+        });
+      } else {
+        this.setState({
+          country: 'US'
+        });
+        storage.setItem('country', 'US');
+      }
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      console.debug('render');
+      var country = this.state.country;
+
+      console.debug(this.props);
+
+      return React.createElement(
+        React.Fragment,
+        null,
         React.createElement(
-          "span",
-          { className: "navbar-text mb-0 h2" },
-          Strings.appName
-        ),
-        React.createElement(
-          "form",
-          null,
-          React.createElement(CountrySelector, { countries: properties.countries, onChange: handleCountryChanged })
-        )
-      )
-    ),
-    React.createElement(
-      "main",
-      { className: "container" },
-      React.createElement(
-        "div",
-        { className: "row mb-5" },
-        React.createElement(
-          "div",
-          { className: "col-md-6 mb-4" },
-          React.createElement(
-            "h5",
-            null,
-            Strings.inputForm
-          ),
+          "header",
+          { className: "navbar navbar-light bg-light mb-5" },
           React.createElement(
             "div",
-            { className: "container border border-dark rounded pt-4 pb-5" },
+            { className: "container-fluid" },
             React.createElement(
-              "p",
-              { className: "mb-2 text-muted" },
-              "Local format"
+              "span",
+              { className: "navbar-text mb-0 h2" },
+              Strings.appName
             ),
             React.createElement(
-              "div",
+              "form",
               null,
-              React.createElement(AddressEntryForm, { countryCode: country, address: new Address() })
+              React.createElement(CountrySelector, { countries: this.props.countries, onChange: this.handleCountryChanged.bind(this), defaultValue: country })
             )
           )
         ),
         React.createElement(
-          "div",
-          { className: "col-md-6" },
-          React.createElement(
-            "h5",
-            null,
-            Strings.outputForm
-          ),
+          "main",
+          { className: "container" },
           React.createElement(
             "div",
-            { className: "container border border-dark rounded pt-4 pb-5" },
+            { className: "row mb-5" },
             React.createElement(
-              "p",
-              { className: "mb-2 text-muted" },
-              "Local format"
+              "div",
+              { className: "col-md-6 mb-4" },
+              React.createElement(
+                "h5",
+                null,
+                Strings.inputForm
+              ),
+              React.createElement(
+                "div",
+                { className: "container border border-dark rounded pt-4 pb-5" },
+                React.createElement(
+                  "p",
+                  { className: "mb-2 text-muted" },
+                  "Local format"
+                ),
+                React.createElement(
+                  "div",
+                  null,
+                  React.createElement(AddressEntryForm, { countryCode: country, address: new Address() })
+                )
+              )
             ),
             React.createElement(
               "div",
-              null,
-              React.createElement(AddressFormat, { countryCode: country })
+              { className: "col-md-6" },
+              React.createElement(
+                "h5",
+                null,
+                Strings.outputForm
+              ),
+              React.createElement(
+                "div",
+                { className: "container border border-dark rounded pt-4 pb-5" },
+                React.createElement(
+                  "p",
+                  { className: "mb-2 text-muted" },
+                  "Local format"
+                ),
+                React.createElement(
+                  "div",
+                  null,
+                  React.createElement(AddressFormat, { countryCode: country })
+                )
+              )
             )
           )
         )
-      )
-    )
-  );
-};
+      );
+    }
+  }]);
+
+  return App;
+}(React.Component);
 
 ReactDOM.render(React.createElement(App, { countries: ehom.i18n.addressData }), document.getElementById('app'));
