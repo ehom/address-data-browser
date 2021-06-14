@@ -224,7 +224,10 @@ function AddressFormatter(countryCode) {
 }
 
 const CountrySelector = ({countries, onChange, defaultValue}) => {
-  const options = Object.keys(countries).map((code) => {
+  // TODO: Sort by Country Names
+  const codes = Object.keys(countries).sort();
+
+  const options = codes.map((code) => {
     if (defaultValue === code) {
       return <option value={code} selected>{countries[code]['name']}</option>;
     }
