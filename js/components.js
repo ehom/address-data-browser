@@ -253,7 +253,10 @@ var CountrySelector = function CountrySelector(_ref3) {
       onChange = _ref3.onChange,
       defaultValue = _ref3.defaultValue;
 
-  var options = Object.keys(countries).map(function (code) {
+  // TODO: Sort by Country Names
+  var codes = Object.keys(countries).sort();
+
+  var options = codes.map(function (code) {
     if (defaultValue === code) {
       return React.createElement(
         "option",
