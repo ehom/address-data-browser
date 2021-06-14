@@ -1,3 +1,5 @@
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var brackets = function brackets(s) {
   return "\xAB" + s + "\xBB";
 };
@@ -253,21 +255,63 @@ var CountrySelector = function CountrySelector(_ref3) {
       onChange = _ref3.onChange,
       defaultValue = _ref3.defaultValue;
 
-  // TODO: Sort by Country Names
-  var codes = Object.keys(countries).sort();
 
-  var options = codes.map(function (code) {
-    if (defaultValue === code) {
+  // TODO --- move this outside of the component
+  var entries = Object.entries(countries);
+
+  var tableOfEntries = {};
+  var _iteratorNormalCompletion = true;
+  var _didIteratorError = false;
+  var _iteratorError = undefined;
+
+  try {
+    for (var _iterator = entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+      var _ref4 = _step.value;
+
+      var _ref5 = _slicedToArray(_ref4, 2);
+
+      var key = _ref5[0];
+      var value = _ref5[1];
+
+      tableOfEntries[value] = key;
+    }
+  } catch (err) {
+    _didIteratorError = true;
+    _iteratorError = err;
+  } finally {
+    try {
+      if (!_iteratorNormalCompletion && _iterator.return) {
+        _iterator.return();
+      }
+    } finally {
+      if (_didIteratorError) {
+        throw _iteratorError;
+      }
+    }
+  }
+
+  console.debug("table:", tableOfEntries);
+
+  var sortedCountryNames = Object.keys(tableOfEntries).sort();
+  // END of TODO
+
+  var options = sortedCountryNames.map(function (name) {
+    var _ref6 = [tableOfEntries[name], name],
+        countryCode = _ref6[0],
+        displayName = _ref6[1];
+
+
+    if (defaultValue === tableOfEntries[name]) {
       return React.createElement(
         "option",
-        { value: code, selected: true },
-        countries[code]['name']
+        { value: countryCode, selected: true },
+        displayName
       );
     }
     return React.createElement(
       "option",
-      { value: code },
-      countries[code]['name']
+      { value: countryCode },
+      displayName
     );
   });
 
