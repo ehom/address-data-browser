@@ -45,7 +45,16 @@ class App extends React.Component {
   render() {
     console.debug('render');
     const {country} = this.state;
-    console.debug(this.props);
+
+    // KLUDGE
+    let countries = {};
+    for (let [key, value] of Object.entries(this.props.countries)) {
+      countries[key] = value.name;
+    }
+    delete countries['ZZ'];
+    countries['AX'] = 'ALAND ISLANDS';
+    countries['SG'] = 'SINGAPORE (REP. OF)';
+    // MOVE this out of this function
 
     return (
       <React.Fragment>
@@ -53,7 +62,7 @@ class App extends React.Component {
           <div className="container-fluid">
             <span className="navbar-text mb-0 h2">{Strings.appName}</span>
             <form>
-              <CountrySelector countries={this.props.countries} onChange={this.handleCountryChanged.bind(this)} defaultValue={country}/>
+              <CountrySelector countries={countries} onChange={this.handleCountryChanged.bind(this)} defaultValue={country}/>
             </form>
           </div>
         </header>
