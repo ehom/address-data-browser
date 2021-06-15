@@ -60,20 +60,16 @@ var App = function (_React$Component) {
       }
     }
   }, {
-    key: "render",
-    value: function render() {
-      console.debug('render');
-      var country = this.state.country;
-
-      // KLUDGE
-
+    key: "buildDisplayNames",
+    value: function buildDisplayNames(metadata) {
       var countries = {};
+
       var _iteratorNormalCompletion = true;
       var _didIteratorError = false;
       var _iteratorError = undefined;
 
       try {
-        for (var _iterator = Object.entries(this.props.countries)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        for (var _iterator = Object.entries(metadata)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
           var _ref = _step.value;
 
           var _ref2 = _slicedToArray(_ref, 2);
@@ -99,8 +95,53 @@ var App = function (_React$Component) {
       }
 
       delete countries['ZZ'];
+      // eventually, we could change these lines
+      // in the generated files at build time
       countries['AX'] = 'ALAND ISLANDS';
       countries['SG'] = 'SINGAPORE (REP. OF)';
+
+      var tableOfEntries = {};
+      var _iteratorNormalCompletion2 = true;
+      var _didIteratorError2 = false;
+      var _iteratorError2 = undefined;
+
+      try {
+        for (var _iterator2 = Object.entries(countries)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+          var _ref3 = _step2.value;
+
+          var _ref4 = _slicedToArray(_ref3, 2);
+
+          var _key = _ref4[0];
+          var _value = _ref4[1];
+
+          tableOfEntries[_value] = _key;
+        }
+      } catch (err) {
+        _didIteratorError2 = true;
+        _iteratorError2 = err;
+      } finally {
+        try {
+          if (!_iteratorNormalCompletion2 && _iterator2.return) {
+            _iterator2.return();
+          }
+        } finally {
+          if (_didIteratorError2) {
+            throw _iteratorError2;
+          }
+        }
+      }
+
+      return tableOfEntries;
+    }
+  }, {
+    key: "render",
+    value: function render() {
+      console.debug('render');
+      var country = this.state.country;
+
+      // KLUDGE
+
+      var table = this.buildDisplayNames(this.props.countries);
       // MOVE this out of this function
 
       return React.createElement(
@@ -120,7 +161,7 @@ var App = function (_React$Component) {
             React.createElement(
               "form",
               null,
-              React.createElement(CountrySelector, { countries: countries, onChange: this.handleCountryChanged.bind(this), defaultValue: country })
+              React.createElement(CountrySelector, { countries: table, onChange: this.handleCountryChanged.bind(this), defaultValue: country })
             )
           )
         ),
