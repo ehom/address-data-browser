@@ -43,20 +43,26 @@ var App = function (_React$Component) {
   _createClass(App, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      var DEFAULT_COUNTRY_CODE = 'US';
+
       console.debug('check window session storage');
       var storage = window.sessionStorage;
 
       console.debug("win storage:", storage);
+      var selector = document.getElementById('country-selector');
 
       if (storage.getItem('country')) {
+        var lastCountryCode = storage.getItem('country');
         this.setState({
-          country: storage.getItem('country')
+          country: lastCountryCode
         });
+        selector.value = lastCountryCode;
       } else {
         this.setState({
-          country: 'US'
+          country: DEFAULT_COUNTRY_CODE
         });
-        storage.setItem('country', 'US');
+        storage.setItem('country', DEFAULT_COUNTRY_CODE);
+        selector.value = DEFAULT_COUNTRY_CODE;
       }
     }
   }, {
@@ -161,7 +167,7 @@ var App = function (_React$Component) {
             React.createElement(
               "form",
               null,
-              React.createElement(CountrySelector, { countries: table, onChange: this.handleCountryChanged.bind(this), defaultValue: country })
+              React.createElement(CountrySelector, { id: "country-selector", countries: table, onChange: this.handleCountryChanged.bind(this), defaultValue: country })
             )
           )
         ),

@@ -249,38 +249,30 @@ function AddressFormatter(countryCode) {
 }
 
 var CountrySelector = function CountrySelector(_ref3) {
-  var countries = _ref3.countries,
+  var id = _ref3.id,
+      countries = _ref3.countries,
       onChange = _ref3.onChange,
       defaultValue = _ref3.defaultValue;
 
   console.debug("table:", countries);
 
   var sortedCountryNames = Object.keys(countries).sort();
-  // END of TODO
 
   var options = sortedCountryNames.map(function (name) {
     var _ref4 = [countries[name], name],
         countryCode = _ref4[0],
         displayName = _ref4[1];
 
-
-    if (defaultValue === countryCode) {
-      return React.createElement(
-        "option",
-        { value: countryCode, selected: true },
-        displayName
-      );
-    }
     return React.createElement(
       "option",
-      { value: countryCode },
+      { value: countryCode, key: countryCode },
       displayName
     );
   });
 
   return React.createElement(
     "select",
-    { id: "country-selector", className: "form-control", onChange: onChange },
+    { id: id, className: "form-control", onChange: onChange },
     options
   );
 };
