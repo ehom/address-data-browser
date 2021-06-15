@@ -223,23 +223,18 @@ function AddressFormatter(countryCode) {
   };
 }
 
-const CountrySelector = ({countries, onChange, defaultValue}) => {
+const CountrySelector = ({id, countries, onChange, defaultValue}) => {
   console.debug("table:", countries);
 
   const sortedCountryNames = Object.keys(countries).sort();
-  // END of TODO
 
   const options = sortedCountryNames.map((name) => {
     const [countryCode, displayName] = [countries[name], name];
-
-    if (defaultValue === countryCode) {
-      return <option value={countryCode} selected>{displayName}</option>;
-    }
-    return <option value={countryCode}>{displayName}</option>;
+    return <option value={countryCode} key={countryCode}>{displayName}</option>;
   });
 
   return (
-    <select id="country-selector" className="form-control" onChange={onChange}>
+    <select id={id} className="form-control" onChange={onChange}>
       {options}
     </select>
   );

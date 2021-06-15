@@ -18,20 +18,26 @@ class App extends React.Component {
   };
 
   componentDidMount() {
+    const DEFAULT_COUNTRY_CODE = 'US';
+
     console.debug('check window session storage');
     let storage = window.sessionStorage;
 
     console.debug("win storage:", storage);
+    let selector = document.getElementById('country-selector');
 
     if (storage.getItem('country')){
+      const lastCountryCode = storage.getItem('country');
       this.setState({
-        country: storage.getItem('country')
+        country: lastCountryCode
       });
+      selector.value = lastCountryCode;
     } else {
       this.setState({
-        country: 'US'
+        country: DEFAULT_COUNTRY_CODE
       });
-      storage.setItem('country', 'US');
+      storage.setItem('country', DEFAULT_COUNTRY_CODE);
+      selector.value = DEFAULT_COUNTRY_CODE;
     }
   }
 
@@ -75,7 +81,7 @@ class App extends React.Component {
           <div className="container-fluid">
             <span className="navbar-text mb-0 h2">{Strings.appName}</span>
             <form>
-              <CountrySelector countries={table} onChange={this.handleCountryChanged.bind(this)} defaultValue={country}/>
+              <CountrySelector id="country-selector" countries={table} onChange={this.handleCountryChanged.bind(this)} defaultValue={country}/>
             </form>
           </div>
         </header>
