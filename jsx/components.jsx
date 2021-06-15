@@ -224,23 +224,15 @@ function AddressFormatter(countryCode) {
 }
 
 const CountrySelector = ({countries, onChange, defaultValue}) => {
+  console.debug("table:", countries);
 
-  // TODO --- move this outside of the component
-  const entries = Object.entries(countries);
-
-  let tableOfEntries = {};
-  for (const [key, value] of entries) {
-    tableOfEntries[value] = key;
-  }
-  console.debug("table:", tableOfEntries);
-
-  const sortedCountryNames = Object.keys(tableOfEntries).sort();
+  const sortedCountryNames = Object.keys(countries).sort();
   // END of TODO
 
   const options = sortedCountryNames.map((name) => {
-    const [countryCode, displayName] = [tableOfEntries[name], name];
+    const [countryCode, displayName] = [countries[name], name];
 
-    if (defaultValue === tableOfEntries[name]) {
+    if (defaultValue === countryCode) {
       return <option value={countryCode} selected>{displayName}</option>;
     }
     return <option value={countryCode}>{displayName}</option>;

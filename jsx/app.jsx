@@ -42,18 +42,31 @@ class App extends React.Component {
     window.sessionStorage.setItem('country', event.target.value);
   };
 
+  buildDisplayNames(metadata) {
+    let countries = {};
+
+    for (const [key, value] of Object.entries(metadata)) {
+      countries[key] = value.name;
+    }
+    delete countries['ZZ'];
+    // eventually, we could change these lines
+    // in the generated files at build time
+    countries['AX'] = 'ALAND ISLANDS';
+    countries['SG'] = 'SINGAPORE (REP. OF)';
+
+    let tableOfEntries = {};
+    for (const [key, value] of Object.entries(countries)) {
+      tableOfEntries[value] = key;
+    }
+    return tableOfEntries;
+  }
+
   render() {
     console.debug('render');
     const {country} = this.state;
 
     // KLUDGE
-    let countries = {};
-    for (let [key, value] of Object.entries(this.props.countries)) {
-      countries[key] = value.name;
-    }
-    delete countries['ZZ'];
-    countries['AX'] = 'ALAND ISLANDS';
-    countries['SG'] = 'SINGAPORE (REP. OF)';
+    let table = this.buildDisplayNames(this.props.countries);
     // MOVE this out of this function
 
     return (
@@ -62,7 +75,7 @@ class App extends React.Component {
           <div className="container-fluid">
             <span className="navbar-text mb-0 h2">{Strings.appName}</span>
             <form>
-              <CountrySelector countries={countries} onChange={this.handleCountryChanged.bind(this)} defaultValue={country}/>
+              <CountrySelector countries={table} onChange={this.handleCountryChanged.bind(this)} defaultValue={country}/>
             </form>
           </div>
         </header>
