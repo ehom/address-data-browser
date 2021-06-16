@@ -9,8 +9,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Strings = {
-  appName: "address metadata explorer",
-  selectCountry: "select country",
+  appName: "ADDRESS METADATA EXPLORER",
   outputForm: "output form",
   inputForm: "input form"
 };
@@ -65,76 +64,34 @@ var App = function (_React$Component) {
   }, {
     key: "buildDisplayNames",
     value: function buildDisplayNames(metadata) {
-      var countries = {};
+      // TODO-- we could prolly create the map
+      // in one iteration
 
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
+      // create map -- countryCode: countryName
+      var countries = Object.entries(metadata).reduce(function (accumulator, _ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+            key = _ref2[0],
+            value = _ref2[1];
 
-      try {
-        for (var _iterator = Object.entries(metadata)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var _ref = _step.value;
-
-          var _ref2 = _slicedToArray(_ref, 2);
-
-          var key = _ref2[0];
-          var value = _ref2[1];
-
-          countries[key] = value.name;
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
+        accumulator[key] = value.name;
+        return accumulator;
+      }, {});
 
       delete countries['ZZ'];
-      // eventually, we could change these lines
+      // Eventually, we could change these lines
       // in the generated files at build time
       countries['AX'] = 'ALAND ISLANDS';
       countries['SG'] = 'SINGAPORE (REP. OF)';
 
-      var tableOfEntries = {};
-      var _iteratorNormalCompletion2 = true;
-      var _didIteratorError2 = false;
-      var _iteratorError2 = undefined;
+      // create map of "country name" to "country code"
+      return Object.entries(countries).reduce(function (accumulator, _ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2),
+            key = _ref4[0],
+            value = _ref4[1];
 
-      try {
-        for (var _iterator2 = Object.entries(countries)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-          var _ref3 = _step2.value;
-
-          var _ref4 = _slicedToArray(_ref3, 2);
-
-          var _key = _ref4[0];
-          var _value = _ref4[1];
-
-          tableOfEntries[_value] = _key;
-        }
-      } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion2 && _iterator2.return) {
-            _iterator2.return();
-          }
-        } finally {
-          if (_didIteratorError2) {
-            throw _iteratorError2;
-          }
-        }
-      }
-
-      return tableOfEntries;
+        accumulator[value] = key;
+        return accumulator;
+      }, {});
     }
   }, {
     key: "render",
@@ -146,6 +103,8 @@ var App = function (_React$Component) {
 
       var table = this.buildDisplayNames(this.props.countries);
       // MOVE this out of this function
+
+      console.debug("table of display names for menu:", table);
 
       return React.createElement(
         React.Fragment,
