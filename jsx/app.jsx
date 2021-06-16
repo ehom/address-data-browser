@@ -13,32 +13,29 @@ class App extends React.Component {
   }
 
   state = {
-    country: 'US',
+    country: App.defaultProps.country,
     intlAddress: false
   };
 
   componentDidMount() {
-    const DEFAULT_COUNTRY_CODE = 'US';
-
     console.debug('check window session storage');
-    let storage = window.sessionStorage;
+    const storage = window.sessionStorage;
 
     console.debug("win storage:", storage);
-    let selector = document.getElementById('country-selector');
+    const selector = document.getElementById('country-selector');
+    let country = App.defaultProps.country;
 
-    if (storage.getItem('country')){
-      const lastCountryCode = storage.getItem('country');
-      this.setState({
-        country: lastCountryCode
-      });
-      selector.value = lastCountryCode;
-    } else {
-      this.setState({
-        country: DEFAULT_COUNTRY_CODE
-      });
-      storage.setItem('country', DEFAULT_COUNTRY_CODE);
-      selector.value = DEFAULT_COUNTRY_CODE;
+    if (this.props.country && Object.keys(this.props.countries).includes(this.props.country)) {
+      country = this.props.country;
+    } else if (storage.getItem('country')){
+      country = storage.getItem('country');
     }
+
+    this.setState({
+      country: country
+    });
+    storage.setItem('country', country);
+    selector.value = country;
   }
 
   handleCountryChanged = (event) => {
@@ -113,4 +110,11 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(<App countries={ehom.i18n.addressData}/>, document.getElementById('app'));
+App.defaultProps = {
+  country: 'US'
+};
+
+const url = new URL(window.location.href);
+const country = url.searchParams.get('country');
+
+ReactDOM.render(<App country={country} countries={ehom.i18n.addressData}/>, document.getElementById('app'));
