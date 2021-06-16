@@ -26,7 +26,7 @@ var App = function (_React$Component) {
     var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, properties));
 
     _this.state = {
-      country: 'US',
+      country: App.defaultProps.country,
       intlAddress: false
     };
 
@@ -43,27 +43,24 @@ var App = function (_React$Component) {
   _createClass(App, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      var DEFAULT_COUNTRY_CODE = 'US';
-
       console.debug('check window session storage');
       var storage = window.sessionStorage;
 
       console.debug("win storage:", storage);
       var selector = document.getElementById('country-selector');
+      var country = App.defaultProps.country;
 
-      if (storage.getItem('country')) {
-        var lastCountryCode = storage.getItem('country');
-        this.setState({
-          country: lastCountryCode
-        });
-        selector.value = lastCountryCode;
-      } else {
-        this.setState({
-          country: DEFAULT_COUNTRY_CODE
-        });
-        storage.setItem('country', DEFAULT_COUNTRY_CODE);
-        selector.value = DEFAULT_COUNTRY_CODE;
+      if (this.props.country && Object.keys(this.props.countries).includes(this.props.country)) {
+        country = this.props.country;
+      } else if (storage.getItem('country')) {
+        country = storage.getItem('country');
       }
+
+      this.setState({
+        country: country
+      });
+      storage.setItem('country', country);
+      selector.value = country;
     }
   }, {
     key: "buildDisplayNames",
@@ -232,4 +229,11 @@ var App = function (_React$Component) {
   return App;
 }(React.Component);
 
-ReactDOM.render(React.createElement(App, { countries: ehom.i18n.addressData }), document.getElementById('app'));
+App.defaultProps = {
+  country: 'US'
+};
+
+var url = new URL(window.location.href);
+var country = url.searchParams.get('country');
+
+ReactDOM.render(React.createElement(App, { country: country, countries: ehom.i18n.addressData }), document.getElementById('app'));
