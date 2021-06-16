@@ -1,6 +1,5 @@
 const Strings = {
-  appName: "address metadata explorer",
-  selectCountry: "select country",
+  appName: "ADDRESS METADATA EXPLORER",
   outputForm: "output form",
   inputForm: "input form"
 };
@@ -46,22 +45,26 @@ class App extends React.Component {
   };
 
   buildDisplayNames(metadata) {
-    let countries = {};
+    // TODO-- we could prolly create the map
+    // in one iteration
 
-    for (const [key, value] of Object.entries(metadata)) {
-      countries[key] = value.name;
-    }
+    // create map -- countryCode: countryName
+    let countries = Object.entries(metadata).reduce((accumulator, [key, value]) => {
+      accumulator[key] = value.name;
+      return accumulator;
+    }, {});
+
     delete countries['ZZ'];
-    // eventually, we could change these lines
+    // Eventually, we could change these lines
     // in the generated files at build time
     countries['AX'] = 'ALAND ISLANDS';
     countries['SG'] = 'SINGAPORE (REP. OF)';
 
-    let tableOfEntries = {};
-    for (const [key, value] of Object.entries(countries)) {
-      tableOfEntries[value] = key;
-    }
-    return tableOfEntries;
+    // create map of "country name" to "country code"
+    return Object.entries(countries).reduce((accumulator, [key, value]) => {
+      accumulator[value] = key;
+      return accumulator;
+    }, {});
   }
 
   render() {
@@ -71,6 +74,8 @@ class App extends React.Component {
     // KLUDGE
     let table = this.buildDisplayNames(this.props.countries);
     // MOVE this out of this function
+
+    console.debug("table of display names for menu:", table);
 
     return (
       <React.Fragment>
