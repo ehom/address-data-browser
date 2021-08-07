@@ -156,7 +156,7 @@ function AddressEntryForm(_ref2) {
         )
       );
     },
-    'sortCode': function sortCode() {
+    sortCode: function sortCode() {
       return React.createElement("input", { type: "text", className: "form-control mb-0", placeholder: "sort code" });
     }
   };
