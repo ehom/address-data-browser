@@ -125,7 +125,7 @@ function AddressEntryForm({countryCode, address}) {
         </React.Fragment>
       );
     },
-    'sortCode': () => {
+    sortCode: () => {
       return (
         <input type="text" className="form-control mb-0" placeholder="sort code" />
       );
